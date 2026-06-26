@@ -213,9 +213,7 @@
             <div class="header-right">
                 <div class="clock" id="clock">00:00:00 AM</div>
                 <div class="date" id="date">--</div>
-                <div class="holiday" id="holiday-row">
-                    <i class="fa-solid fa-gift"></i> <span id="holiday-text">--</span>
-                </div>
+
             </div>
         </div>
 
@@ -232,9 +230,13 @@
 
                 <div class="apple-card daily-list-card">
                     <h3><i class="fa-solid fa-calendar-days"></i> 5-DAY FORECAST</h3>
-                    <div id="daily-list-container">
-                        <!-- Populated via JS -->
-                    </div>
+                    <div id="daily-list-container"></div>
+                </div>
+
+                <div class="apple-card widget" id="holiday-card" style="display:none;">
+                    <div class="widget-header"><i class="fa-solid fa-gift"></i> NSW HOLIDAY</div>
+                    <div class="widget-val" id="holiday-title" style="font-size:1.5rem;">--</div>
+                    <div class="widget-desc" id="holiday-text">--</div>
                 </div>
             </div>
 
@@ -430,14 +432,14 @@
             document.getElementById('lat-lon').textContent = `Lat: ${current.coord.lat.toFixed(2)} | Lon: ${current.coord.lon.toFixed(2)}`;
 
             // Holidays Calculation Engine
-            const holRow = document.getElementById('holiday-row');
+            const holidayCard=document.getElementById('holiday-card');
             if (isNSW) {
-                const future = nswHolidays.filter(h => h.date.getTime() > new Date().getTime());
-                if (future.length > 0) {
-                    const diffTime = Math.abs(future[0].date - new Date());
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    document.getElementById('holiday-text').textContent = `${future[0].name} is ${diffDays} Days away`;
-                    holRow.style.display = "flex";
+                const future=nswHolidays.filter(h=>h.date>new Date());
+                if(future.length){
+                    const diffDays=Math.ceil((future[0].date-new Date())/(1000*60*60*24));
+                    holidayCard.style.display='flex';
+                    document.getElementById('holiday-title').textContent=future[0].name;
+                    document.getElementById('holiday-text').textContent=`${diffDays} day${diffDays!==1?'s':''} remaining`;
                 }
             }
 
@@ -489,7 +491,7 @@
             
             // Wind
             document.getElementById('val-wind').innerHTML = `${(current.wind.speed).toFixed(1)} <span style="font-size:1.1rem">m/s</span>`;
-            document.getElementById('val-wind-dir').textContent = getCompassDir(current.wind.deg);
+            document.getElementById('val-wind-dir').textContent = getCompassDir(current.wind.deg).trim();
             
             // Humidity & Dew Point
             const approxDew = Math.round(current.main.temp - ((100 - current.main.humidity)/5));
