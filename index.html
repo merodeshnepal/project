@@ -8,17 +8,10 @@
     <style>
         :root {
             /* Authentic Apple Weather Glassmorphism Palette */
-            --apple-glass: rgba(0, 0, 0, 0.25);
-            --apple-border: rgba(255, 255, 255, 0.15);
+            --apple-glass: rgba(255, 255, 255, 0.08);
+            --apple-border: rgba(255, 255, 255, 0.18);
             --text-main: #ffffff;
             --text-muted: rgba(255, 255, 255, 0.65);
-            
-            /* Backgrounds */
-            --img-clear: url('https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1920&auto=format&fit=crop');
-            --img-clouds: url('https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1920&auto=format&fit=crop');
-            --img-rain: url('https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1920&auto=format&fit=crop');
-            --img-snow: url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?q=80&w=1920&auto=format&fit=crop');
-            --img-night: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1920&auto=format&fit=crop');
         }
 
         /* Fluid Typography Engine for Perfect Vector Scaling */
@@ -28,11 +21,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background-color: #0f172a;
-            background-image: var(--img-clear);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-color: #0b0f19;
             color: var(--text-main);
             height: 100vh;
             width: 100vw;
@@ -40,16 +29,17 @@
             display: flex;
             flex-direction: column;
             padding: 1.5rem 2.5rem;
-            transition: background-image 1.5s ease-in-out;
             letter-spacing: -0.02em;
+            position: relative;
         }
 
-        /* Ambient Dark Overlay for Apple-style contrast */
-        body::before {
-            content: '';
+        /* High-Performance Canvas for 4K Vector Weather Simulation */
+        #weather-canvas {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.35);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
             pointer-events: none;
         }
@@ -73,13 +63,14 @@
             margin-bottom: 1.5rem;
         }
 
-        .header-left h1 { font-size: 2.5rem; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .header-left { text-align: left; }
+        .header-left h1 { font-size: 2.5rem; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .header-left p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.2rem; }
         
         .header-right { 
             display: flex; flex-direction: column; align-items: flex-end; text-align: right; 
         }
-        .header-right .clock { font-size: 2.8rem; font-weight: 600; font-variant-numeric: tabular-nums; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .header-right .clock { font-size: 2.8rem; font-weight: 600; font-variant-numeric: tabular-nums; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .header-right .date { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 0.4rem; }
 
         /* --- APPLE DASHBOARD GRID --- */
@@ -99,19 +90,20 @@
         /* Authentic Apple Hero Card */
         .apple-card {
             background: var(--apple-glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
             border: 1px solid var(--apple-border);
             border-radius: 1.8rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            text-align: center; /* Center aligns standard text contents universally */
         }
 
         .hero-card {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 2.5rem 1.5rem; flex-shrink: 0; text-align: center;
+            padding: 2.5rem 1.5rem; flex-shrink: 0;
         }
 
-        .hero-card .big-temp { font-size: 7.5rem; font-weight: 200; line-height: 1; margin-bottom: 0.5rem; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .hero-card .big-temp { font-size: 7.5rem; font-weight: 200; line-height: 1; margin-bottom: 0.5rem; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .hero-card .desc { font-size: 1.8rem; font-weight: 500; text-transform: capitalize; margin-bottom: 0.3rem; }
         .hero-card .extremes { font-size: 1.3rem; font-weight: 500; color: #ffffff; }
 
@@ -125,18 +117,18 @@
 
         .daily-list-card h3 {
             font-size: 1.1rem; color: var(--text-muted); font-weight: 500;
-            display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.8rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding-bottom: 0.8rem;
             border-bottom: 1px solid var(--apple-border);
         }
 
         .daily-row {
             display: flex; align-items: center; justify-content: space-between;
-            font-size: 1.4rem; font-weight: 500; padding: 0.4rem 0;
+            font-size: 1.4rem; font-weight: 500; padding: 0.4rem 2rem;
         }
 
-        .daily-row .day-name { width: 30%; }
-        .daily-row i { width: 20%; text-align: center; font-size: 1.6rem; }
-        .daily-row .temps { width: 50%; text-align: right; display: flex; justify-content: flex-end; gap: 1.5rem; font-variant-numeric: tabular-nums;}
+        .daily-row .day-name { width: 33%; text-align: left; }
+        .daily-row i { width: 33%; text-align: center; font-size: 1.6rem; }
+        .daily-row .temps { width: 33%; text-align: right; display: flex; justify-content: flex-end; gap: 1.5rem; font-variant-numeric: tabular-nums;}
         .daily-row .min-temp { color: var(--text-muted); }
 
         /* RIGHT SIDE (Hourly & Grid Widgets) */
@@ -152,10 +144,11 @@
         .hourly-card h3 {
             font-size: 1.1rem; color: var(--text-muted); font-weight: 500;
             margin-bottom: 1rem; border-bottom: 1px solid var(--apple-border); padding-bottom: 0.8rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
 
         .hourly-scroll {
-            display: flex; justify-content: space-between; align-items: center; width: 100%;
+            display: flex; justify-content: space-around; align-items: center; width: 100%;
         }
 
         .hour-item {
@@ -172,17 +165,17 @@
         }
 
         .widget {
-            padding: 1.2rem; display: flex; flex-direction: column; justify-content: flex-start;
+            padding: 1.2rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         }
 
         .widget-header {
             font-size: 1rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;
-            display: flex; align-items: center; gap: 0.4rem; margin-bottom: 1rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 1rem; width: 100%;
         }
 
-        .widget-val { font-size: 2.2rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem;}
-        .widget-sub { font-size: 1.1rem; font-weight: 400; color: var(--text-main); }
-        .widget-desc { font-size: 1rem; color: var(--text-muted); margin-top: auto; }
+        .widget-val { font-size: 2.2rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; width: 100%; text-align: center;}
+        .widget-sub { font-size: 1.1rem; font-weight: 400; color: var(--text-main); width: 100%; text-align: center; }
+        .widget-desc { font-size: 1rem; color: var(--text-muted); margin-top: auto; width: 100%; text-align: center; }
 
         #loading {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -192,6 +185,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Dynamic Simulation Layer Controls Everything Real-time Below -->
+    <canvas id="weather-canvas"></canvas>
 
     <div id="loading">
         <i class="fa-solid fa-circle-notch fa-spin"></i>
@@ -302,7 +298,7 @@
 
     <script>
         const API_KEY = '5c5f6e5e8fcaa41d61c3255f3298590a'; 
-        let cityTimezoneOffset = null; // Global timezone tracker
+        let cityTimezoneOffset = null; 
         
         const iconMap = {
             '01d': 'fa-sun', '01n': 'fa-moon', '02d': 'fa-cloud-sun', '02n': 'fa-cloud-moon',
@@ -327,6 +323,241 @@
             { name: "Boxing Day Observed", date: new Date("2026-12-28T00:00:00") }
         ];
 
+        // --- Pure Programmatic 4K Real-Time Animated Environment Engine ---
+        const canvas = document.getElementById('weather-canvas');
+        const ctx = canvas.getContext('2d');
+        let elements = [];
+        let weatherMode = 'clear'; 
+        let sunAngle = 0;
+        let nightStars = [];
+
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+            initWeatherElements();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function initWeatherElements() {
+            elements = [];
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            
+            // Build permanent dark starry backdrop for evening intervals
+            nightStars = [];
+            for (let i = 0; i < 200; i++) {
+                nightStars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2, alpha: Math.random() });
+            }
+
+            if (weatherMode === 'rain' || weatherMode === 'thunderstorm') {
+                for (let i = 0; i < 220; i++) {
+                    elements.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        length: Math.random() * 25 + 20,
+                        speed: Math.random() * 18 + 14,
+                        weight: Math.random() * 1.2 + 0.6
+                    });
+                }
+            } else if (weatherMode === 'snow') {
+                for (let i = 0; i < 150; i++) {
+                    elements.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        radius: Math.random() * 3.5 + 1,
+                        drift: Math.random() * 10,
+                        speed: Math.random() * 1.2 + 0.6
+                    });
+                }
+            } else if (weatherMode === 'clouds') {
+                for (let i = 0; i < 12; i++) {
+                    elements.push({
+                        x: Math.random() * (w + 400) - 200,
+                        y: Math.random() * (h * 0.5),
+                        radius: Math.random() * 160 + 100,
+                        speed: Math.random() * 0.18 + 0.05,
+                        opacity: Math.random() * 0.07 + 0.03
+                    });
+                }
+            } else if (weatherMode === 'clear') {
+                // Light particles for sunny/clear blue atmosphere ambient look
+                for (let i = 0; i < 40; i++) {
+                    elements.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        radius: Math.random() * 4 + 2,
+                        speed: Math.random() * 0.3 + 0.1,
+                        alpha: Math.random() * 0.3 + 0.1
+                    });
+                }
+            }
+        }
+
+        function drawBackgroundSky(w, h, isNight) {
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, h);
+            
+            if (isNight) {
+                skyGrad.addColorStop(0, '#060913');
+                skyGrad.addColorStop(1, '#111726');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, w, h);
+                
+                // Redraw shimmering star coordinates
+                nightStars.forEach(s => {
+                    s.alpha += (Math.random() - 0.5) * 0.04;
+                    if (s.alpha < 0) s.alpha = 0;
+                    if (s.alpha > 1) s.alpha = 1;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                return;
+            }
+
+            // Day states
+            if (weatherMode === 'clear') {
+                skyGrad.addColorStop(0, '#3a88e9');
+                skyGrad.addColorStop(0.6, '#5ea4ff');
+                skyGrad.addColorStop(1, '#a1caff');
+            } else if (weatherMode === 'clouds') {
+                skyGrad.addColorStop(0, '#576c89');
+                skyGrad.addColorStop(1, '#8fa0b8');
+            } else if (weatherMode === 'rain' || weatherMode === 'thunderstorm') {
+                skyGrad.addColorStop(0, '#2b3644');
+                skyGrad.addColorStop(1, '#465366');
+            } else if (weatherMode === 'snow') {
+                skyGrad.addColorStop(0, '#75889b');
+                skyGrad.addColorStop(1, '#b4c3d2');
+            }
+            
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Realistic moving sun core & dynamic volumetric flare if clear
+            if (weatherMode === 'clear') {
+                sunAngle += 0.001;
+                let sunX = w * 0.75 + Math.sin(sunAngle) * 20;
+                let sunY = h * 0.25 + Math.cos(sunAngle) * 10;
+                
+                let sunGlow = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 280);
+                sunGlow.addColorStop(0, 'rgba(255, 255, 240, 1)');
+                sunGlow.addColorStop(0.1, 'rgba(255, 253, 210, 0.8)');
+                sunGlow.addColorStop(0.4, 'rgba(255, 255, 255, 0.2)');
+                sunGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                ctx.fillStyle = sunGlow;
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, 280, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animateWeather() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const timeNow = Math.floor(Date.now() / 1000);
+            
+            // Check current global position timing metrics
+            let isNight = false;
+            if (window.currentSunriseTime && window.currentSunsetTime) {
+                isNight = timeNow < window.currentSunriseTime || timeNow > window.currentSunsetTime;
+            }
+
+            drawBackgroundSky(w, h, isNight);
+
+            if (weatherMode === 'rain' || weatherMode === 'thunderstorm') {
+                ctx.strokeStyle = 'rgba(174, 201, 226, 0.45)';
+                ctx.lineCap = 'round';
+                elements.forEach(p => {
+                    ctx.lineWidth = p.weight;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.x + (p.speed * 0.04), p.y + p.length);
+                    ctx.stroke();
+
+                    p.y += p.speed;
+                    p.x += p.speed * 0.04;
+                    if (p.y > h) {
+                        p.y = -p.length;
+                        p.x = Math.random() * w;
+                    }
+                });
+
+                if (weatherMode === 'thunderstorm' && Math.random() > 0.988) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.fillRect(0, 0, w, h);
+                }
+            } else if (weatherMode === 'snow') {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.beginPath();
+                elements.forEach(p => {
+                    ctx.moveTo(p.x, p.y);
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, true);
+
+                    p.y += p.speed;
+                    p.x += Math.sin(p.drift) * 0.4;
+                    p.drift += 0.015;
+
+                    if (p.y > h || p.x > w || p.x < 0) {
+                        p.y = -10;
+                        p.x = Math.random() * w;
+                    }
+                });
+                ctx.fill();
+            } else if (weatherMode === 'clouds') {
+                elements.forEach(p => {
+                    let gradient = ctx.createRadialGradient(p.x, p.y, 10, p.x, p.y, p.radius);
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${p.opacity})`);
+                    gradient.addColorStop(0.8, `rgba(240, 245, 255, ${p.opacity * 0.4})`);
+                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    p.x += p.speed;
+                    if (p.x - p.radius > w) {
+                        p.x = -p.radius;
+                        p.y = Math.random() * (h * 0.5);
+                    }
+                });
+            } else if (weatherMode === 'clear') {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                elements.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    p.y -= p.speed;
+                    if (p.y < -10) {
+                        p.y = h + 10;
+                        p.x = Math.random() * w;
+                    }
+                });
+            }
+
+            requestAnimationFrame(animateWeather);
+        }
+
+        function updateWeatherEngine(conditionCode) {
+            let nextMode = 'clear';
+            const cond = conditionCode.toLowerCase();
+
+            if (cond.includes('thunderstorm')) nextMode = 'thunderstorm';
+            else if (cond.includes('rain') || cond.includes('drizzle')) nextMode = 'rain';
+            else if (cond.includes('snow')) nextMode = 'snow';
+            else if (cond.includes('cloud')) nextMode = 'clouds';
+            else nextMode = 'clear';
+
+            if (nextMode !== weatherMode) {
+                weatherMode = nextMode;
+                initWeatherElements();
+            }
+        }
+
         // Core Ticking Clock (Timezone Aware)
         function initClock() {
             function update() {
@@ -334,7 +565,6 @@
                 
                 if (cityTimezoneOffset !== null) {
                     const localNow = new Date();
-                    // Convert local time to UTC, then apply the specific city's offset
                     const utcTime = localNow.getTime() + (localNow.getTimezoneOffset() * 60000);
                     targetDate = new Date(utcTime + (cityTimezoneOffset * 1000));
                 } else {
@@ -348,7 +578,6 @@
                 h = h % 12 || 12;
                 document.getElementById('clock').textContent = `${h}:${m}:${s} ${ampm}`;
 
-                // Manual date string construction to prevent the browser from overriding the timezone shift
                 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 const dayName = days[targetDate.getDay()];
@@ -378,9 +607,12 @@
             }
         }
 
+        function fallbackToSydney() {
+            fetchWeather(-33.8688, 151.2093);
+        }
+
         async function fetchWeather(lat, lon) {
             try {
-                // Fetch Current, Forecast, and Air Pollution
                 const curRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
                 const forRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
                 const airRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
@@ -422,7 +654,6 @@
             return { full: `${h}:${m} ${ampm}` };
         }
 
-        // Interpolates temperature for 1-hour intervals between 3-hour chunks
         function getInterpolatedHour(targetTimeUnix, forecastList) {
             const afterIdx = forecastList.findIndex(item => item.dt > targetTimeUnix);
             if (afterIdx <= 0) return { temp: forecastList[0].main.temp, icon: forecastList[0].weather[0].icon };
@@ -438,23 +669,17 @@
         }
 
         function renderDashboard(current, forecast, air, isNSW) {
-            const cond = current.weather[0].main.toLowerCase();
-            const timeNow = Math.floor(Date.now() / 1000);
-            const isNight = timeNow < current.sys.sunrise || timeNow > current.sys.sunset;
-            
-            if (isNight) document.body.style.backgroundImage = "var(--img-night)";
-            else if (cond.includes('rain') || cond.includes('drizzle') || cond.includes('thunderstorm')) document.body.style.backgroundImage = "var(--img-rain)";
-            else if (cond.includes('cloud')) document.body.style.backgroundImage = "var(--img-clouds)";
-            else if (cond.includes('snow')) document.body.style.backgroundImage = "var(--img-snow)";
-            else document.body.style.backgroundImage = "var(--img-clear)";
+            // Save sunrise and sunset parameters inside window namespace for global requestAnimationFrame loops
+            window.currentSunriseTime = current.sys.sunrise;
+            window.currentSunsetTime = current.sys.sunset;
+
+            updateWeatherEngine(current.weather[0].main);
 
             document.getElementById('city-name').textContent = current.name;
             document.getElementById('lat-lon').textContent = `Lat: ${current.coord.lat.toFixed(2)} | Lon: ${current.coord.lon.toFixed(2)}`;
 
-            // Sync Main Clock Timezone to fetched location
             cityTimezoneOffset = current.timezone;
 
-            // Holidays Calculation Engine
             const holidayCard=document.getElementById('holiday-card');
             if (isNSW) {
                 const future=nswHolidays.filter(h=>h.date>new Date());
@@ -468,10 +693,8 @@
                 holidayCard.style.display='none';
             }
 
-            // Group Days for Lists (Extrapolating to 7 Days)
             const dailyMap = {};
             forecast.list.forEach(item => {
-                // Adjust timestamp to local target timezone before splitting the day to avoid boundary shifts
                 const dtLocal = new Date((item.dt + current.timezone) * 1000);
                 const dateKey = dtLocal.toISOString().split('T')[0];
                 if (!dailyMap[dateKey]) dailyMap[dateKey] = [];
@@ -480,7 +703,6 @@
             
             const sortedDates = Object.keys(dailyMap).sort();
             
-            // Extrapolate remaining days if API gave less than 7 days
             while (sortedDates.length < 7) {
                 const lastDateObj = new Date(sortedDates[sortedDates.length - 1]);
                 lastDateObj.setDate(lastDateObj.getDate() + 1);
@@ -489,13 +711,11 @@
                 sortedDates.push(newDateStr);
             }
             
-            // Set Hero Extremes
             const todaySlots = dailyMap[sortedDates[0]];
             const tH = Math.max(...todaySlots.map(s => s.main.temp_max));
             const tL = Math.min(...todaySlots.map(s => s.main.temp_min));
             document.getElementById('main-extremes').textContent = `H:${Math.round(tH)}°  L:${Math.round(tL)}°`;
 
-            // Populate Vertical 7-Day List 
             const listDiv = document.getElementById('daily-list-container');
             listDiv.innerHTML = '';
             
@@ -506,7 +726,6 @@
                 const midSlot = slots[Math.floor(slots.length/2)];
                 const ic = iconMap[midSlot.weather[0].icon] || 'fa-cloud';
                 
-                // Determine actual date based on offset to prevent timezone stripping issues
                 let dayName;
                 if (idx === 0) {
                     dayName = "Today";
@@ -528,26 +747,19 @@
                 `;
             });
 
-            // Hero Frame Data
             document.getElementById('main-temp').innerHTML = `${Math.round(current.main.temp)}°`;
             document.getElementById('main-desc').textContent = current.weather[0].description;
-
-            // --- Grid Widget Population ---
             
-            // Wind
             document.getElementById('val-wind').innerHTML = `${(current.wind.speed).toFixed(1)} <span style="font-size:1.1rem">m/s</span>`;
             document.getElementById('val-wind-dir').textContent = getCompassDir(current.wind.deg).trim();
             
-            // Humidity & Dew Point
             const approxDew = Math.round(current.main.temp - ((100 - current.main.humidity)/5));
             document.getElementById('val-hum').textContent = `${current.main.humidity}%`;
             document.getElementById('val-dew').textContent = `${approxDew}°`;
             
-            // Sunrise/Sunset Exact Formatter
             document.getElementById('val-sunrise').textContent = formatTimeExact(current.sys.sunrise, current.timezone).full;
             document.getElementById('val-sunset').textContent = formatTimeExact(current.sys.sunset, current.timezone).full;
             
-            // Moon Phase Estimator
             const lp = 2551443;
             const moonRaw = ((Date.now() - new Date(1970, 0, 7, 20, 35, 0).getTime()) % lp) / lp;
             let phaseName = 'New Moon';
@@ -560,23 +772,20 @@
             else if (moonRaw > 0.75) phaseName = 'Waning Crescent';
             document.getElementById('val-moon').textContent = phaseName;
 
-            // Air Pollution (AQI)
             let aqi = 1;
             if (air && air.list && air.list.length > 0) aqi = air.list[0].main.aqi;
             const aqiLevels = { 1: "Good", 2: "Fair", 3: "Moderate", 4: "Poor", 5: "Very Poor" };
             document.getElementById('val-air').textContent = aqi;
             document.getElementById('sub-air').textContent = aqiLevels[aqi] || "Unknown";
 
-            // Chance of Rain
             const chanceOfRain = Math.round((forecast.list[0].pop || 0) * 100);
             document.getElementById('val-rain').textContent = `${chanceOfRain}%`;
 
-            // Horizontal Hourly Forecast (1-Hour Intervals Generated)
             const hrCards = document.getElementById('hourly-cards');
             hrCards.innerHTML = '';
             
+            const timeNow = Math.floor(Date.now() / 1000);
             for (let i = 0; i < 7; i++) {
-                // Target time increments by exact 1 hour (3600s)
                 const targetUnix = timeNow + (i * 3600);
                 const interData = getInterpolatedHour(targetUnix, forecast.list);
                 
@@ -605,8 +814,11 @@
             }
         }
 
+        // Initialize engines
+        resizeCanvas();
         initClock();
         locateAndFetch();
+        animateWeather();
         setInterval(locateAndFetch, 180000); 
     </script>
 </body>
