@@ -95,7 +95,7 @@
             border: 1px solid var(--apple-border);
             border-radius: 1.8rem;
             box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-            text-align: center; /* Center aligns standard text contents universally */
+            text-align: center; 
         }
 
         .hero-card {
@@ -177,6 +177,19 @@
         .widget-sub { font-size: 1.1rem; font-weight: 400; color: var(--text-main); width: 100%; text-align: center; }
         .widget-desc { font-size: 1rem; color: var(--text-muted); margin-top: auto; width: 100%; text-align: center; }
 
+        /* Lunar Vector Presentation Node Styling */
+        .moon-container {
+            width: 4.5rem;
+            height: 4.5rem;
+            margin: 0.2rem auto 0.6rem auto;
+            position: relative;
+        }
+        .moon-canvas {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-15deg); /* Emulate dynamic orbital tilt perspective */
+        }
+
         #loading {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #0b0f19; display: flex; flex-direction: column; gap: 1.5rem;
@@ -186,7 +199,6 @@
 </head>
 <body>
 
-    <!-- Dynamic Simulation Layer Controls Everything Real-time Below -->
     <canvas id="weather-canvas"></canvas>
 
     <div id="loading">
@@ -195,7 +207,6 @@
     </div>
 
     <div class="main-wrapper">
-        <!-- Top Header -->
         <div class="top-header">
             <div class="header-left">
                 <h1 id="city-name">Detecting Position...</h1>
@@ -207,10 +218,7 @@
             </div>
         </div>
 
-        <!-- Dashboard Grid Layout -->
         <div class="dashboard-grid">
-            
-            <!-- Left Column: Hero & Daily List -->
             <div class="left-col">
                 <div class="apple-card hero-card">
                     <div class="big-temp" id="main-temp">--°</div>
@@ -223,7 +231,6 @@
                     <div id="daily-list-container"></div>
                 </div>
 
-                <!-- NSW Holiday Card underneath forecast -->
                 <div class="apple-card widget" id="holiday-card" style="display:none; padding: 1.5rem; flex-shrink: 0;">
                     <div class="widget-header"><i class="fa-solid fa-gift"></i> NSW HOLIDAY</div>
                     <div class="widget-val" id="holiday-title" style="font-size:1.5rem;">--</div>
@@ -231,20 +238,13 @@
                 </div>
             </div>
 
-            <!-- Right Column: Hourly Strip & Widgets -->
             <div class="right-col">
-                
                 <div class="apple-card hourly-card">
                     <h3><i class="fa-solid fa-clock"></i> HOURLY FORECAST</h3>
-                    <div class="hourly-scroll" id="hourly-cards">
-                        <!-- Populated via JS -->
-                    </div>
+                    <div class="hourly-scroll" id="hourly-cards"></div>
                 </div>
 
-                <!-- Apple Square Widgets -->
                 <div class="widget-grid">
-                    
-                    <!-- Exact Sunrise/Sunset Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-sun"></i> SUNRISE & SUNSET</div>
                         <div class="widget-val" id="val-sunrise" style="font-size:1.8rem; margin-top:0.5rem;">--:-- AM</div>
@@ -253,7 +253,6 @@
                         <div class="widget-sub" style="color:var(--text-muted);">Sunset</div>
                     </div>
 
-                    <!-- Wind Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-wind"></i> WIND</div>
                         <div class="widget-val" id="val-wind">--</div>
@@ -261,21 +260,21 @@
                         <div class="widget-desc">Current wind speed metrics.</div>
                     </div>
 
-                    <!-- Rainfall/Humidity Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-droplet"></i> HUMIDITY</div>
                         <div class="widget-val" id="val-hum">--%</div>
                         <div class="widget-desc">The dew point is <span id="val-dew">--°</span> right now.</div>
                     </div>
 
-                    <!-- Moon Phase Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-moon"></i> MOON PHASE</div>
-                        <div class="widget-val" id="val-moon" style="font-size: 1.8rem;">--</div>
-                        <div class="widget-desc">Current lunar cycle tracking.</div>
+                        <div class="moon-container">
+                            <canvas id="moon-vector" class="moon-canvas" width="120" height="120"></canvas>
+                        </div>
+                        <div class="widget-val" id="val-moon" style="font-size: 1.4rem; margin-bottom: 0.2rem;">--</div>
+                        <div class="widget-desc" id="val-moon-details">Illumination: --%</div>
                     </div>
 
-                    <!-- Air Pollution Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-lungs"></i> AIR QUALITY</div>
                         <div class="widget-val" id="val-air">--</div>
@@ -283,16 +282,13 @@
                         <div class="widget-desc">Air Quality Index (1-5).</div>
                     </div>
 
-                    <!-- Chance of Rain Card -->
                     <div class="apple-card widget">
                         <div class="widget-header"><i class="fa-solid fa-umbrella"></i> CHANCE OF RAIN</div>
                         <div class="widget-val" id="val-rain">--%</div>
                         <div class="widget-desc">Precipitation probability.</div>
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -345,7 +341,6 @@
             const w = window.innerWidth;
             const h = window.innerHeight;
             
-            // Build permanent dark starry backdrop for evening intervals
             nightStars = [];
             for (let i = 0; i < 200; i++) {
                 nightStars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.2, alpha: Math.random() });
@@ -382,7 +377,6 @@
                     });
                 }
             } else if (weatherMode === 'clear') {
-                // Light particles for sunny/clear blue atmosphere ambient look
                 for (let i = 0; i < 40; i++) {
                     elements.push({
                         x: Math.random() * w,
@@ -404,7 +398,6 @@
                 ctx.fillStyle = skyGrad;
                 ctx.fillRect(0, 0, w, h);
                 
-                // Redraw shimmering star coordinates
                 nightStars.forEach(s => {
                     s.alpha += (Math.random() - 0.5) * 0.04;
                     if (s.alpha < 0) s.alpha = 0;
@@ -417,7 +410,6 @@
                 return;
             }
 
-            // Day states
             if (weatherMode === 'clear') {
                 skyGrad.addColorStop(0, '#3a88e9');
                 skyGrad.addColorStop(0.6, '#5ea4ff');
@@ -436,7 +428,6 @@
             ctx.fillStyle = skyGrad;
             ctx.fillRect(0, 0, w, h);
 
-            // Realistic moving sun core & dynamic volumetric flare if clear
             if (weatherMode === 'clear') {
                 sunAngle += 0.001;
                 let sunX = w * 0.75 + Math.sin(sunAngle) * 20;
@@ -460,7 +451,6 @@
             const h = window.innerHeight;
             const timeNow = Math.floor(Date.now() / 1000);
             
-            // Check current global position timing metrics
             let isNight = false;
             if (window.currentSunriseTime && window.currentSunsetTime) {
                 isNight = timeNow < window.currentSunriseTime || timeNow > window.currentSunsetTime;
@@ -558,7 +548,6 @@
             }
         }
 
-        // Core Ticking Clock (Timezone Aware)
         function initClock() {
             function update() {
                 let targetDate;
@@ -668,8 +657,126 @@
             return { temp, icon };
         }
 
+    /*
+ * Ultra-Precision Modern Astronomical Lunar Tracker
+ * Implements an exact structural cycle formula to prevent multi-day drift.
+ */
+function calculateHighPrecisionMoonPhase() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    
+    // 1. Calculate Julian Date representation with high precision fractional days
+    let msY = year;
+    let msM = month;
+    if (month <= 2) { msY -= 1; msM += 12; }
+    const A = Math.floor(msY / 100);
+    const B = Math.floor(A / 4);
+    const C = 2 - A + B;
+    const E = Math.floor(365.25 * (msY + 4716));
+    const F = Math.floor(30.6001 * (msM + 1));
+    const jd = C + day + E + F - 1524.5 + (now.getHours() + now.getMinutes()/60 + now.getSeconds()/3600) / 24;
+    
+    // 2. Compute exact fractional age of the current synodic lunation period
+    const daysSinceEpoch = jd - 2451550.1; // Anchored closer to modern epoch (Jan 6, 2000)
+    const lunations = daysSinceEpoch / 29.530588853;
+    const normalizedPhase = lunations - Math.floor(lunations); 
+    
+    // 3. Compute precise illumination matrix percentage
+    const illumination = Math.round((1 - Math.cos(normalizedPhase * 2 * Math.PI)) * 50);
+
+    // 4. Advanced Gate Threshold System: Enforces accurate classification based on visual layout
+    let phaseName = '';
+    
+    // Wide tracking gates to prevent near-100% full phases from dropping into Gibbous category
+    if (illumination >= 98.5) {
+        phaseName = 'Full Moon';
+    } else if (illumination <= 1.5) {
+        phaseName = 'New Moon';
+    } else if (normalizedPhase > 0 && normalizedPhase < 0.23) {
+        phaseName = 'Waxing Crescent';
+    } else if (normalizedPhase >= 0.23 && normalizedPhase <= 0.27) {
+        phaseName = 'First Quarter';
+    } else if (normalizedPhase > 0.27 && normalizedPhase < 0.5) {
+        phaseName = 'Waxing Gibbous';
+    } else if (normalizedPhase > 0.5 && normalizedPhase < 0.73) {
+        phaseName = 'Waning Gibbous';
+    } else if (normalizedPhase >= 0.73 && normalizedPhase <= 0.77) {
+        phaseName = 'Last Quarter';
+    } else {
+        phaseName = 'Waning Crescent';
+    }
+
+    return { phase: normalizedPhase, title: phaseName, illumination: illumination };
+}
+
+/**
+ * Photorealistic Lunar Vector Generator
+ */
+function drawVectorMoonGraphic(phaseValue, phaseTitle) {
+    const mCanvas = document.getElementById('moon-vector');
+    if (!mCanvas) return;
+    const mCtx = mCanvas.getContext('2d');
+    const w = mCanvas.width;
+    const h = mCanvas.height;
+    const r = w / 2 - 4;
+    const cx = w / 2;
+    const cy = h / 2;
+
+    mCtx.clearRect(0, 0, w, h);
+
+    // Subtle ambient shadow base behind the moon
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    mCtx.fill();
+
+    mCtx.save();
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.clip();
+
+    // Apple style soft volumetric lunar reflection gradient
+    const moonGlow = mCtx.createLinearGradient(0, 0, w, h);
+    moonGlow.addColorStop(0, '#ffffff');
+    moonGlow.addColorStop(0.5, '#f5f6f9');
+    moonGlow.addColorStop(1, '#cfd4dd');
+    mCtx.fillStyle = moonGlow;
+
+    // Force perfect orb rendering if categorized under the Full Moon threshold
+    if (phaseTitle === 'Full Moon') {
+        mCtx.beginPath();
+        mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        mCtx.fill();
+    } else {
+        // Advanced geometric ellipse curve math for smooth crescent/gibbous transitions
+        const hemisphere = phaseValue <= 0.5 ? 1 : -1;
+        const rx = Math.abs(1 - 4 * phaseValue) * r;
+
+        mCtx.beginPath();
+        if (phaseValue <= 0.25 || phaseValue >= 0.75) {
+            mCtx.arc(cx, cy, r, Math.PI / 2, (3 * Math.PI) / 2, hemisphere === 1);
+            mCtx.ellipse(cx, cy, rx, r, 0, (3 * Math.PI) / 2, Math.PI / 2, hemisphere === 1);
+        } else {
+            mCtx.arc(cx, cy, r, Math.PI / 2, (3 * Math.PI) / 2, hemisphere === 1);
+            mCtx.ellipse(cx, cy, rx, r, 0, (3 * Math.PI) / 2, Math.PI / 2, hemisphere !== 1);
+        }
+        mCtx.closePath();
+        mCtx.fill();
+    }
+    
+    mCtx.restore();
+
+    // Clean structural vector border stroke overlay
+    mCtx.beginPath();
+    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
+    mCtx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+    mCtx.lineWidth = 1;
+    mCtx.stroke();
+}
+
         function renderDashboard(current, forecast, air, isNSW) {
-            // Save sunrise and sunset parameters inside window namespace for global requestAnimationFrame loops
             window.currentSunriseTime = current.sys.sunrise;
             window.currentSunsetTime = current.sys.sunset;
 
@@ -714,7 +821,7 @@
             const todaySlots = dailyMap[sortedDates[0]];
             const tH = Math.max(...todaySlots.map(s => s.main.temp_max));
             const tL = Math.min(...todaySlots.map(s => s.main.temp_min));
-            document.getElementById('main-extremes').textContent = `H:${Math.round(tH)}°  L:${Math.round(tL)}°`;
+            document.getElementById('main-extremes').textContent = `H:${Math.round(tH)}°   L:${Math.round(tL)}°`;
 
             const listDiv = document.getElementById('daily-list-container');
             listDiv.innerHTML = '';
@@ -760,17 +867,12 @@
             document.getElementById('val-sunrise').textContent = formatTimeExact(current.sys.sunrise, current.timezone).full;
             document.getElementById('val-sunset').textContent = formatTimeExact(current.sys.sunset, current.timezone).full;
             
-            const lp = 2551443;
-            const moonRaw = ((Date.now() - new Date(1970, 0, 7, 20, 35, 0).getTime()) % lp) / lp;
-            let phaseName = 'New Moon';
-            if (moonRaw > 0 && moonRaw < 0.25) phaseName = 'Waxing Crescent';
-            else if (moonRaw === 0.25) phaseName = 'First Quarter';
-            else if (moonRaw > 0.25 && moonRaw < 0.5) phaseName = 'Waxing Gibbous';
-            else if (moonRaw === 0.5) phaseName = 'Full Moon';
-            else if (moonRaw > 0.5 && moonRaw < 0.75) phaseName = 'Waning Gibbous';
-            else if (moonRaw === 0.75) phaseName = 'Last Quarter';
-            else if (moonRaw > 0.75) phaseName = 'Waning Crescent';
-            document.getElementById('val-moon').textContent = phaseName;
+            // Render High Precision Moon Phase Node
+const moonMetrics = calculateHighPrecisionMoonPhase();
+document.getElementById('val-moon').textContent = moonMetrics.title;
+document.getElementById('val-moon-details').textContent = `Illumination: ${moonMetrics.illumination}%`;
+
+drawVectorMoonGraphic(moonMetrics.phase, moonMetrics.title);
 
             let aqi = 1;
             if (air && air.list && air.list.length > 0) aqi = air.list[0].main.aqi;
