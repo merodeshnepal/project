@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Kiosk</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Authentic Apple Weather Glassmorphism Palette */
             --apple-glass: rgba(255, 255, 255, 0.08);
-            --apple-border: rgba(255, 255, 255, 0.18);
+            --apple-border: rgba(255, 255, 255, 0.15);
             --text-main: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.65);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --accent-color: #ffffff;
         }
 
         /* Fluid Typography Engine for Perfect Vector Scaling */
@@ -20,7 +22,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #0b0f19;
             color: var(--text-main);
             height: 100vh;
@@ -28,8 +30,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 1.5rem 2.5rem;
-            letter-spacing: -0.02em;
+            padding: 2.5rem 3rem;
+            letter-spacing: -0.01em;
             position: relative;
         }
 
@@ -54,146 +56,296 @@
             min-height: 0; 
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER BLOCK --- */
         .top-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: flex-end;
             flex-shrink: 0;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 0 0.5rem;
         }
 
         .header-left { text-align: left; }
-        .header-left h1 { font-size: 2.5rem; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .header-left p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .header-left h1 { font-size: 3.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .header-left p { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.3rem; font-variant-numeric: tabular-nums; }
         
         .header-right { 
             display: flex; flex-direction: column; align-items: flex-end; text-align: right; 
         }
-        .header-right .clock { font-size: 2.8rem; font-weight: 600; font-variant-numeric: tabular-nums; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .header-right .date { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .header-right .date { font-size: 1.3rem; color: var(--text-muted); margin-bottom: 0.3rem; font-weight: 500; }
+        .header-right .clock { 
+            font-size: 2.6rem; 
+            font-weight: 700; 
+            color: #ffffff;
+            font-variant-numeric: tabular-nums; 
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            white-space: nowrap;
+        }
 
-        /* --- APPLE DASHBOARD GRID --- */
+        .time-secondary {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* --- DISPLAY GRID LAYOUT MATCHING IMAGE --- */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 35% 65%;
-            gap: 1.5rem;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: 1.1fr 1fr;
+            gap: 2rem 2.5rem;
             flex-grow: 1;
             min-height: 0;
         }
 
-        /* LEFT SIDE (Hero & Daily List) */
-        .left-col {
-            display: flex; flex-direction: column; gap: 1.5rem; height: 100%; min-height: 0; 
-        }
-
-        /* Authentic Apple Hero Card */
         .apple-card {
             background: var(--apple-glass);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
             border: 1px solid var(--apple-border);
-            border-radius: 1.8rem;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-            text-align: center; 
+            border-radius: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
-        .hero-card {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 2.5rem 1.5rem; flex-shrink: 0;
+        /* --- UPPER LEFT: PRIMARY HERO DISPLAY --- */
+        .main-weather {
+            grid-column: span 6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
         }
 
-        .hero-card .big-temp { font-size: 7.5rem; font-weight: 200; line-height: 1; margin-bottom: 0.5rem; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .hero-card .desc { font-size: 1.8rem; font-weight: 500; text-transform: capitalize; margin-bottom: 0.3rem; }
-        .hero-card .extremes { font-size: 1.3rem; font-weight: 500; color: #ffffff; }
-
-        /* Apple Vertical List */
-        .daily-list-card {
-            flex-grow: 1;
-            padding: 1.5rem;
-            display: flex; flex-direction: column; gap: 1rem;
-            overflow: hidden;
+        .main-weather-status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .daily-list-card h3 {
-            font-size: 1.1rem; color: var(--text-muted); font-weight: 500;
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--apple-border);
+        .main-weather-icon {
+            font-size: 3rem;
+            color: #ffffff;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
         }
 
-        .daily-row {
-            display: flex; align-items: center; justify-content: space-between;
-            font-size: 1.4rem; font-weight: 500; padding: 0.4rem 2rem;
+        .condition-text { 
+            font-size: 2.4rem; 
+            color: #ffffff; 
+            font-weight: 600; 
+            text-transform: capitalize;
         }
 
-        .daily-row .day-name { width: 33%; text-align: left; }
-        .daily-row i { width: 33%; text-align: center; font-size: 1.6rem; }
-        .daily-row .temps { width: 33%; text-align: right; display: flex; justify-content: flex-end; gap: 1.5rem; font-variant-numeric: tabular-nums;}
-        .daily-row .min-temp { color: var(--text-muted); }
-
-        /* RIGHT SIDE (Hourly & Grid Widgets) */
-        .right-col {
-            display: flex; flex-direction: column; gap: 1.5rem; height: 100%; min-height: 0;
+        .temp-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin: 0.5rem 0;
         }
 
-        /* Apple Hourly Horizontal Strip */
-        .hourly-card {
-            padding: 1.5rem; flex-shrink: 0;
+        .temp-big { 
+            font-size: 9.5rem; 
+            font-weight: 800; 
+            line-height: 0.85; 
+            letter-spacing: -2px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .temp-unit {
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-left: 4px;
+            margin-top: 4px;
         }
 
-        .hourly-card h3 {
-            font-size: 1.1rem; color: var(--text-muted); font-weight: 500;
-            margin-bottom: 1rem; border-bottom: 1px solid var(--apple-border); padding-bottom: 0.8rem;
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        .feels-like-text {
+            font-size: 1.4rem; 
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
 
-        .hourly-scroll {
-            display: flex; justify-content: space-around; align-items: center; width: 100%;
+        /* --- UPPER RIGHT: 2x2 CONDITIONS PANEL --- */
+        .stats-grid-container {
+            grid-column: span 6;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1.5rem 2rem;
         }
 
-        .hour-item {
-            display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+        .stat-card {
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
-        .hour-item .time { font-size: 1.2rem; font-weight: 500; }
-        .hour-item i { font-size: 2rem; color: #ffffff; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .hour-item .temp { font-size: 1.5rem; font-weight: 500; }
-
-        /* Apple Square Widgets Grid */
-        .widget-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; flex-grow: 1; min-height: 0;
+        .stat-card i {
+            font-size: 2.6rem;
+            color: #ffffff;
+            width: 45px;
+            text-align: center;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
         }
 
-        .widget {
-            padding: 1.2rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        .stat-card .details-box {
+            display: flex;
+            flex-direction: column;
         }
 
-        .widget-header {
-            font-size: 1rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 1rem; width: 100%;
+        .stat-card .label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
 
-        .widget-val { font-size: 2.2rem; font-weight: 400; line-height: 1.1; margin-bottom: 0.5rem; width: 100%; text-align: center;}
-        .widget-sub { font-size: 1.1rem; font-weight: 400; color: var(--text-main); width: 100%; text-align: center; }
-        .widget-desc { font-size: 1rem; color: var(--text-muted); margin-top: auto; width: 100%; text-align: center; }
-
-        /* Lunar Vector Presentation Node Styling */
-        .moon-container {
-            width: 4.5rem;
-            height: 4.5rem;
-            margin: 0.2rem auto 0.6rem auto;
-            position: relative;
+        .stat-card .value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
         }
-        .moon-canvas {
-            width: 100%;
+
+        /* --- LOWER LEFT: HORIZONTAL 7-DAY FORECAST --- */
+        .bottom-left-forecast {
+            grid-column: span 8;
+        }
+
+        .single-forecast-card {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
             height: 100%;
-            transform: rotate(-15deg); /* Emulate dynamic orbital tilt perspective */
+            padding: 2rem;
+        }
+
+        .forecast-item {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .forecast-item:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .forecast-item .day { 
+            font-size: 1.2rem; 
+            margin-bottom: 1rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .forecast-item i {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+        }
+        
+        .forecast-item .temp { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* --- LOWER RIGHT: EPHEMERIS / HOLIDAY CARD --- */
+        .bottom-right-station {
+            grid-column: span 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .info-module {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-module .label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .info-module .value {
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .holiday-badge {
+            font-size: 1.3rem;
+            color: #ffffff;
+            opacity: 0.8;
+            font-weight: 700;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .celestial-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .celestial-svg {
+            width: 45px;
+            height: 30px;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .celestial-subitem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .celestial-subitem .time-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            margin-top: 2px;
+        }
+
+        hr.module-divider {
+            border: none;
+            border-top: 1px solid var(--apple-border); 
+            width: 80%;
         }
 
         #loading {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #0b0f19; display: flex; flex-direction: column; gap: 1.5rem;
             justify-content: center; align-items: center; font-size: 2rem; z-index: 100; color: white;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
@@ -209,83 +361,92 @@
     <div class="main-wrapper">
         <div class="top-header">
             <div class="header-left">
-                <h1 id="city-name">Detecting Position...</h1>
+                <h1 id="city-name">Detecting...</h1>
                 <p id="lat-lon">Coordinates offline</p>
             </div>
             <div class="header-right">
-                <div class="clock" id="clock">00:00:00 AM</div>
                 <div class="date" id="date">--</div>
+                <div class="clock" id="clock">00:00<span class="time-secondary">:00 AM</span></div>
             </div>
         </div>
 
         <div class="dashboard-grid">
-            <div class="left-col">
-                <div class="apple-card hero-card">
-                    <div class="big-temp" id="main-temp">--°</div>
-                    <div class="desc" id="main-desc">--</div>
-                    <div class="extremes" id="main-extremes">H:--° L:--°</div>
+            <div class="apple-card main-weather">
+                <div class="main-weather-status-wrapper">
+                    <i class="fas fa-circle-notch fa-spin main-weather-icon" id="main-condition-icon"></i>
+                    <div class="condition-text" id="main-desc">Syncing...</div>
                 </div>
-
-                <div class="apple-card daily-list-card">
-                    <h3><i class="fa-solid fa-calendar-days"></i> 7-DAY FORECAST</h3>
-                    <div id="daily-list-container"></div>
+                <div class="temp-container">
+                    <div class="temp-big" id="main-temp">--</div>
+                    <div class="temp-unit">°C</div>
                 </div>
+                <div class="feels-like-text" id="main-extremes">Feels like --°C</div>
+            </div>
 
-                <div class="apple-card widget" id="holiday-card" style="display:none; padding: 1.5rem; flex-shrink: 0;">
-                    <div class="widget-header"><i class="fa-solid fa-gift"></i> NSW HOLIDAY</div>
-                    <div class="widget-val" id="holiday-title" style="font-size:1.5rem;">--</div>
-                    <div class="widget-desc" id="holiday-text">--</div>
+            <div class="stats-grid-container">
+                <div class="apple-card stat-card">
+                    <i class="fa-solid fa-droplet"></i>
+                    <div class="details-box">
+                        <div class="label">Humidity</div>
+                        <div class="value" id="val-hum">--%</div>
+                    </div>
+                </div>
+                <div class="apple-card stat-card">
+                    <i class="fa-solid fa-umbrella"></i>
+                    <div class="details-box">
+                        <div class="label">Rain Prob.</div>
+                        <div class="value" id="val-rain">--%</div>
+                    </div>
+                </div>
+                <div class="apple-card stat-card">
+                    <i class="fa-solid fa-wind"></i>
+                    <div class="details-box">
+                        <div class="label">Wind Speed</div>
+                        <div class="value" id="val-wind">--</div>
+                    </div>
+                </div>
+                <div class="apple-card stat-card">
+                    <i class="fa-solid fa-lungs"></i>
+                    <div class="details-box">
+                        <div class="label">Air Quality</div>
+                        <div class="value" id="val-air">--</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="right-col">
-                <div class="apple-card hourly-card">
-                    <h3><i class="fa-solid fa-clock"></i> HOURLY FORECAST</h3>
-                    <div class="hourly-scroll" id="hourly-cards"></div>
+            <div class="bottom-left-forecast">
+                <div class="apple-card single-forecast-card" id="daily-list-container"></div>
+            </div>
+
+            <div class="apple-card bottom-right-station">
+                <div class="info-module" id="holiday-module" style="visibility: hidden;">
+                    <div class="label"><i class="fa-solid fa-calendar-day"></i> Next NSW Holiday</div>
+                    <div class="value" id="holiday-title">--</div>
+                    <div class="holiday-badge" id="holiday-text">-- Days Left</div>
                 </div>
-
-                <div class="widget-grid">
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-sun"></i> SUNRISE & SUNSET</div>
-                        <div class="widget-val" id="val-sunrise" style="font-size:1.8rem; margin-top:0.5rem;">--:-- AM</div>
-                        <div class="widget-sub" style="color:var(--text-muted); margin-bottom:1rem;">Sunrise</div>
-                        <div class="widget-val" id="val-sunset" style="font-size:1.8rem;">--:-- PM</div>
-                        <div class="widget-sub" style="color:var(--text-muted);">Sunset</div>
+                
+                <hr class="module-divider">
+                
+                <div class="celestial-row">
+                    <div class="celestial-subitem">
+                        <svg class="celestial-svg" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10,45 L90,45" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M25,45 C25,20 75,20 75,45" stroke="#ffffff" stroke-width="4" fill="none" stroke-dasharray="6,4"/>
+                            <circle cx="50" cy="22" r="8" fill="#ffffff"/>
+                            <line x1="50" y1="6" x2="50" y2="11" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                        <div class="info-module"><div class="label">Sunrise</div></div>
+                        <div class="time-val" id="val-sunrise">--:--</div>
                     </div>
-
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-wind"></i> WIND</div>
-                        <div class="widget-val" id="val-wind">--</div>
-                        <div class="widget-sub" id="val-wind-dir">--</div>
-                        <div class="widget-desc">Current wind speed metrics.</div>
-                    </div>
-
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-droplet"></i> HUMIDITY</div>
-                        <div class="widget-val" id="val-hum">--%</div>
-                        <div class="widget-desc">The dew point is <span id="val-dew">--°</span> right now.</div>
-                    </div>
-
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-moon"></i> MOON PHASE</div>
-                        <div class="moon-container">
-                            <canvas id="moon-vector" class="moon-canvas" width="120" height="120"></canvas>
-                        </div>
-                        <div class="widget-val" id="val-moon" style="font-size: 1.4rem; margin-bottom: 0.2rem;">--</div>
-                        <div class="widget-desc" id="val-moon-details">Illumination: --%</div>
-                    </div>
-
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-lungs"></i> AIR QUALITY</div>
-                        <div class="widget-val" id="val-air">--</div>
-                        <div class="widget-sub" id="sub-air">--</div>
-                        <div class="widget-desc">Air Quality Index (1-5).</div>
-                    </div>
-
-                    <div class="apple-card widget">
-                        <div class="widget-header"><i class="fa-solid fa-umbrella"></i> CHANCE OF RAIN</div>
-                        <div class="widget-val" id="val-rain">--%</div>
-                        <div class="widget-desc">Precipitation probability.</div>
+                    
+                    <div class="celestial-subitem">
+                        <svg class="celestial-svg" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10,45 L90,45" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M25,45 C25,20 75,20 75,45" stroke="#ffffff" stroke-width="4" fill="none"/>
+                            <circle cx="50" cy="40" r="10" fill="#ffffff"/>
+                        </svg>
+                        <div class="info-module"><div class="label">Sunset</div></div>
+                        <div class="time-val" id="val-sunset">--:--</div>
                     </div>
                 </div>
             </div>
@@ -315,11 +476,11 @@
             { name: "King's Birthday", date: new Date("2026-06-08T00:00:00") },
             { name: "Bank Holiday", date: new Date("2026-08-03T00:00:00") },
             { name: "Labour Day", date: new Date("2026-10-05T00:00:00") },
-            { name: "Christmas Day", date: new Date("2026-12-25T00:00:00") },
+            { name: "Christmas Day", date: new Date("2026-12-25正式T00:00:00") },
             { name: "Boxing Day Observed", date: new Date("2026-12-28T00:00:00") }
         ];
 
-        // --- Pure Programmatic 4K Real-Time Animated Environment Engine ---
+        // --- ENVIROMENT RENDERING CANVAS CONFIGURATION LOOP ---
         const canvas = document.getElementById('weather-canvas');
         const ctx = canvas.getContext('2d');
         let elements = [];
@@ -501,7 +662,7 @@
                 elements.forEach(p => {
                     let gradient = ctx.createRadialGradient(p.x, p.y, 10, p.x, p.y, p.radius);
                     gradient.addColorStop(0, `rgba(255, 255, 255, ${p.opacity})`);
-                    gradient.addColorStop(0.8, `rgba(240, 245, 255, ${p.opacity * 0.4})`);
+                    gradient.addColorStop(0.8, `rgba(240, 245, 255, ${p.opacity * 0.45})`);
                     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                     ctx.fillStyle = gradient;
                     ctx.beginPath();
@@ -550,30 +711,19 @@
 
         function initClock() {
             function update() {
-                let targetDate;
-                
-                if (cityTimezoneOffset !== null) {
-                    const localNow = new Date();
-                    const utcTime = localNow.getTime() + (localNow.getTimezoneOffset() * 60000);
-                    targetDate = new Date(utcTime + (cityTimezoneOffset * 1000));
-                } else {
-                    targetDate = new Date();
-                }
+                let targetDate = new Date();
 
-                let h = targetDate.getHours();
-                let m = targetDate.getMinutes().toString().padStart(2, '0');
-                let s = targetDate.getSeconds().toString().padStart(2, '0');
-                const ampm = h >= 12 ? 'PM' : 'AM';
-                h = h % 12 || 12;
-                document.getElementById('clock').textContent = `${h}:${m}:${s} ${ampm}`;
+                const hours = String(targetDate.getHours() % 12 || 12).padStart(2, '0');
+                const minutes = String(targetDate.getMinutes()).padStart(2, '0');
+                const seconds = String(targetDate.getSeconds()).padStart(2, '0');
+                const ampm = targetDate.getHours() >= 12 ? 'PM' : 'AM';
+
+                document.getElementById('clock').innerHTML = `${hours}:${minutes}<span class="time-secondary">:${seconds} ${ampm}</span>`;
 
                 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                const dayName = days[targetDate.getDay()];
-                const monthName = months[targetDate.getMonth()];
-                const dateNum = targetDate.getDate();
                 
-                document.getElementById('date').textContent = `${dayName}, ${dateNum} ${monthName}`;
+                document.getElementById('date').textContent = `${days[targetDate.getDay()]}, ${months[targetDate.getMonth()]} ${targetDate.getDate()}`;
             }
             setInterval(update, 1000);
             update();
@@ -597,41 +747,39 @@
         }
 
         function fallbackToSydney() {
-            fetchWeather(-33.8688, 151.2093);
+            fetchWeather(-33.8115, 151.1500, "Lane Cove West");
         }
 
-        async function fetchWeather(lat, lon) {
+        async function fetchWeather(lat, lon, forcedName = "") {
             try {
                 const curRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
                 const forRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
                 const airRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
                 
-                if (!curRes.ok || !forRes.ok) throw new Error(`API returned status ${curRes.status}`);
+                if (!curRes.ok || !forRes.ok) throw new Error(`API error.`);
 
                 const currentData = await curRes.json();
                 const forecastData = await forRes.json();
                 const airData = airRes.ok ? await airRes.json() : null;
 
+                // Fixed: Explicitly ensures name rendering context doesn't crash if forcedName argument is falsy
+                if (forcedName) {
+                    currentData.name = forcedName;
+                }
+
                 const isNSW = (lat < -28.1 && lat > -37.5 && lon > 141.0 && lon < 154.0);
-                
                 renderDashboard(currentData, forecastData, airData, isNSW);
                 
+                // Loader block safely removed from rendering lifecycle inside promise evaluation thread
                 const loader = document.getElementById('loading');
                 if (loader) {
                     loader.style.opacity = '0';
                     setTimeout(() => loader.style.display = 'none', 500);
                 }
             } catch (err) {
-                console.error("Runtime Exception Trace: ", err);
-                const loadingText = document.getElementById('loading-text');
-                if (loadingText) loadingText.textContent = `Error: ${err.message}.`;
+                console.error("Fetch Failure Handle Loop:", err);
+                document.getElementById('loading-text').innerText = "Connection Refused. Re-trying...";
             }
-        }
-
-        function getCompassDir(deg) {
-            const val = Math.floor((deg / 22.5) + 0.5);
-            const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-            return arr[(val % 16)];
         }
 
         function formatTimeExact(unix, tzOffset) {
@@ -640,141 +788,8 @@
             let m = d.getUTCMinutes().toString().padStart(2, '0');
             const ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12 || 12;
-            return { full: `${h}:${m} ${ampm}` };
+            return { full: `${String(h).padStart(2,'0')}:${m} ${ampm}` };
         }
-
-        function getInterpolatedHour(targetTimeUnix, forecastList) {
-            const afterIdx = forecastList.findIndex(item => item.dt > targetTimeUnix);
-            if (afterIdx <= 0) return { temp: forecastList[0].main.temp, icon: forecastList[0].weather[0].icon };
-            
-            const before = forecastList[afterIdx - 1];
-            const after = forecastList[afterIdx];
-            const ratio = (targetTimeUnix - before.dt) / (after.dt - before.dt);
-            
-            const temp = before.main.temp + ((after.main.temp - before.main.temp) * ratio);
-            const icon = ratio < 0.5 ? before.weather[0].icon : after.weather[0].icon;
-            
-            return { temp, icon };
-        }
-
-    /*
- * Ultra-Precision Modern Astronomical Lunar Tracker
- * Implements an exact structural cycle formula to prevent multi-day drift.
- */
-function calculateHighPrecisionMoonPhase() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    
-    // 1. Calculate Julian Date representation with high precision fractional days
-    let msY = year;
-    let msM = month;
-    if (month <= 2) { msY -= 1; msM += 12; }
-    const A = Math.floor(msY / 100);
-    const B = Math.floor(A / 4);
-    const C = 2 - A + B;
-    const E = Math.floor(365.25 * (msY + 4716));
-    const F = Math.floor(30.6001 * (msM + 1));
-    const jd = C + day + E + F - 1524.5 + (now.getHours() + now.getMinutes()/60 + now.getSeconds()/3600) / 24;
-    
-    // 2. Compute exact fractional age of the current synodic lunation period
-    const daysSinceEpoch = jd - 2451550.1; // Anchored closer to modern epoch (Jan 6, 2000)
-    const lunations = daysSinceEpoch / 29.530588853;
-    const normalizedPhase = lunations - Math.floor(lunations); 
-    
-    // 3. Compute precise illumination matrix percentage
-    const illumination = Math.round((1 - Math.cos(normalizedPhase * 2 * Math.PI)) * 50);
-
-    // 4. Advanced Gate Threshold System: Enforces accurate classification based on visual layout
-    let phaseName = '';
-    
-    // Wide tracking gates to prevent near-100% full phases from dropping into Gibbous category
-    if (illumination >= 98.5) {
-        phaseName = 'Full Moon';
-    } else if (illumination <= 1.5) {
-        phaseName = 'New Moon';
-    } else if (normalizedPhase > 0 && normalizedPhase < 0.23) {
-        phaseName = 'Waxing Crescent';
-    } else if (normalizedPhase >= 0.23 && normalizedPhase <= 0.27) {
-        phaseName = 'First Quarter';
-    } else if (normalizedPhase > 0.27 && normalizedPhase < 0.5) {
-        phaseName = 'Waxing Gibbous';
-    } else if (normalizedPhase > 0.5 && normalizedPhase < 0.73) {
-        phaseName = 'Waning Gibbous';
-    } else if (normalizedPhase >= 0.73 && normalizedPhase <= 0.77) {
-        phaseName = 'Last Quarter';
-    } else {
-        phaseName = 'Waning Crescent';
-    }
-
-    return { phase: normalizedPhase, title: phaseName, illumination: illumination };
-}
-
-/**
- * Photorealistic Lunar Vector Generator
- */
-function drawVectorMoonGraphic(phaseValue, phaseTitle) {
-    const mCanvas = document.getElementById('moon-vector');
-    if (!mCanvas) return;
-    const mCtx = mCanvas.getContext('2d');
-    const w = mCanvas.width;
-    const h = mCanvas.height;
-    const r = w / 2 - 4;
-    const cx = w / 2;
-    const cy = h / 2;
-
-    mCtx.clearRect(0, 0, w, h);
-
-    // Subtle ambient shadow base behind the moon
-    mCtx.beginPath();
-    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
-    mCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-    mCtx.fill();
-
-    mCtx.save();
-    mCtx.beginPath();
-    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
-    mCtx.clip();
-
-    // Apple style soft volumetric lunar reflection gradient
-    const moonGlow = mCtx.createLinearGradient(0, 0, w, h);
-    moonGlow.addColorStop(0, '#ffffff');
-    moonGlow.addColorStop(0.5, '#f5f6f9');
-    moonGlow.addColorStop(1, '#cfd4dd');
-    mCtx.fillStyle = moonGlow;
-
-    // Force perfect orb rendering if categorized under the Full Moon threshold
-    if (phaseTitle === 'Full Moon') {
-        mCtx.beginPath();
-        mCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        mCtx.fill();
-    } else {
-        // Advanced geometric ellipse curve math for smooth crescent/gibbous transitions
-        const hemisphere = phaseValue <= 0.5 ? 1 : -1;
-        const rx = Math.abs(1 - 4 * phaseValue) * r;
-
-        mCtx.beginPath();
-        if (phaseValue <= 0.25 || phaseValue >= 0.75) {
-            mCtx.arc(cx, cy, r, Math.PI / 2, (3 * Math.PI) / 2, hemisphere === 1);
-            mCtx.ellipse(cx, cy, rx, r, 0, (3 * Math.PI) / 2, Math.PI / 2, hemisphere === 1);
-        } else {
-            mCtx.arc(cx, cy, r, Math.PI / 2, (3 * Math.PI) / 2, hemisphere === 1);
-            mCtx.ellipse(cx, cy, rx, r, 0, (3 * Math.PI) / 2, Math.PI / 2, hemisphere !== 1);
-        }
-        mCtx.closePath();
-        mCtx.fill();
-    }
-    
-    mCtx.restore();
-
-    // Clean structural vector border stroke overlay
-    mCtx.beginPath();
-    mCtx.arc(cx, cy, r, 0, Math.PI * 2);
-    mCtx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
-    mCtx.lineWidth = 1;
-    mCtx.stroke();
-}
 
         function renderDashboard(current, forecast, air, isNSW) {
             window.currentSunriseTime = current.sys.sunrise;
@@ -787,17 +802,17 @@ function drawVectorMoonGraphic(phaseValue, phaseTitle) {
 
             cityTimezoneOffset = current.timezone;
 
-            const holidayCard=document.getElementById('holiday-card');
+            const holidayMod = document.getElementById('holiday-module');
             if (isNSW) {
-                const future=nswHolidays.filter(h=>h.date>new Date());
+                const future = nswHolidays.filter(h => h.date > new Date());
                 if(future.length){
-                    const diffDays=Math.ceil((future[0].date-new Date())/(1000*60*60*24));
-                    holidayCard.style.display='flex';
-                    document.getElementById('holiday-title').textContent=future[0].name;
-                    document.getElementById('holiday-text').textContent=`${diffDays} day${diffDays!==1?'s':''} remaining`;
+                    const diffDays = Math.ceil((future[0].date - new Date()) / (1000 * 60 * 60 * 24));
+                    holidayMod.style.visibility = 'visible';
+                    document.getElementById('holiday-title').textContent = future[0].name;
+                    document.getElementById('holiday-text').textContent = `${diffDays} Days Left`;
                 }
             } else {
-                holidayCard.style.display='none';
+                holidayMod.style.visibility = 'hidden';
             }
 
             const dailyMap = {};
@@ -818,10 +833,7 @@ function drawVectorMoonGraphic(phaseValue, phaseTitle) {
                 sortedDates.push(newDateStr);
             }
             
-            const todaySlots = dailyMap[sortedDates[0]];
-            const tH = Math.max(...todaySlots.map(s => s.main.temp_max));
-            const tL = Math.min(...todaySlots.map(s => s.main.temp_min));
-            document.getElementById('main-extremes').textContent = `H:${Math.round(tH)}°   L:${Math.round(tL)}°`;
+            document.getElementById('main-extremes').textContent = `Feels like ${Math.round(current.main.feels_like)}°C`;
 
             const listDiv = document.getElementById('daily-list-container');
             listDiv.innerHTML = '';
@@ -829,7 +841,6 @@ function drawVectorMoonGraphic(phaseValue, phaseTitle) {
             sortedDates.slice(0, 7).forEach((dStr, idx) => {
                 const slots = dailyMap[dStr];
                 const maxT = Math.max(...slots.map(s => s.main.temp_max));
-                const minT = Math.min(...slots.map(s => s.main.temp_min));
                 const midSlot = slots[Math.floor(slots.length/2)];
                 const ic = iconMap[midSlot.weather[0].icon] || 'fa-cloud';
                 
@@ -838,85 +849,40 @@ function drawVectorMoonGraphic(phaseValue, phaseTitle) {
                     dayName = "Today";
                 } else {
                     const daysArr = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-                    const fakeDate = new Date(dStr);
-                    dayName = daysArr[fakeDate.getDay()];
+                    dayName = daysArr[new Date(dStr).getDay()];
                 }
 
                 listDiv.innerHTML += `
-                    <div class="daily-row">
-                        <span class="day-name">${dayName}</span>
+                    <div class="forecast-item">
+                        <div class="day">${dayName}</div>
                         <i class="fa-solid ${ic}"></i>
-                        <div class="temps">
-                            <span class="min-temp">${Math.round(minT)}°</span>
-                            <span class="max-temp">${Math.round(maxT)}°</span>
-                        </div>
+                        <div class="temp">${Math.round(maxT)}°C</div>
                     </div>
                 `;
             });
 
-            document.getElementById('main-temp').innerHTML = `${Math.round(current.main.temp)}°`;
+            document.getElementById('main-temp').textContent = Math.round(current.main.temp);
             document.getElementById('main-desc').textContent = current.weather[0].description;
             
-            document.getElementById('val-wind').innerHTML = `${(current.wind.speed).toFixed(1)} <span style="font-size:1.1rem">m/s</span>`;
-            document.getElementById('val-wind-dir').textContent = getCompassDir(current.wind.deg).trim();
-            
-            const approxDew = Math.round(current.main.temp - ((100 - current.main.humidity)/5));
+            const mainCondIcon = document.getElementById('main-condition-icon');
+            const currentIconCode = current.weather[0].icon;
+            mainCondIcon.className = `fa-solid ${iconMap[currentIconCode] || 'fa-sun'} main-weather-icon`;
+
+            document.getElementById('val-wind').innerHTML = `${(current.wind.speed * 3.6).toFixed(1)} <span style="font-size:1.1rem; color:var(--text-muted);">km/h</span>`;
             document.getElementById('val-hum').textContent = `${current.main.humidity}%`;
-            document.getElementById('val-dew').textContent = `${approxDew}°`;
             
             document.getElementById('val-sunrise').textContent = formatTimeExact(current.sys.sunrise, current.timezone).full;
             document.getElementById('val-sunset').textContent = formatTimeExact(current.sys.sunset, current.timezone).full;
-            
-            // Render High Precision Moon Phase Node
-const moonMetrics = calculateHighPrecisionMoonPhase();
-document.getElementById('val-moon').textContent = moonMetrics.title;
-document.getElementById('val-moon-details').textContent = `Illumination: ${moonMetrics.illumination}%`;
-
-drawVectorMoonGraphic(moonMetrics.phase, moonMetrics.title);
 
             let aqi = 1;
             if (air && air.list && air.list.length > 0) aqi = air.list[0].main.aqi;
-            const aqiLevels = { 1: "Good", 2: "Fair", 3: "Moderate", 4: "Poor", 5: "Very Poor" };
-            document.getElementById('val-air').textContent = aqi;
-            document.getElementById('sub-air').textContent = aqiLevels[aqi] || "Unknown";
+            const aqiLevels = { 1: "1.00 (Good)", 2: "2.00 (Fair)", 3: "3.00 (Mod)", 4: "4.00 (Poor)", 5: "5.00 (Severe)" };
+            document.getElementById('val-air').textContent = aqiLevels[aqi] || "1.00";
 
             const chanceOfRain = Math.round((forecast.list[0].pop || 0) * 100);
             document.getElementById('val-rain').textContent = `${chanceOfRain}%`;
-
-            const hrCards = document.getElementById('hourly-cards');
-            hrCards.innerHTML = '';
-            
-            const timeNow = Math.floor(Date.now() / 1000);
-            for (let i = 0; i < 7; i++) {
-                const targetUnix = timeNow + (i * 3600);
-                const interData = getInterpolatedHour(targetUnix, forecast.list);
-                
-                const targetDateObj = new Date((targetUnix + current.timezone) * 1000);
-                let targetH = targetDateObj.getUTCHours();
-                const targetAmPm = targetH >= 12 ? 'pm' : 'am';
-                targetH = targetH % 12 || 12;
-                
-                let timeStr = `${targetH}${targetAmPm}`;
-                
-                if (i === 0) {
-                    timeStr = "Now";
-                    interData.temp = current.main.temp; 
-                    interData.icon = current.weather[0].icon;
-                }
-
-                const ic = iconMap[interData.icon] || 'fa-cloud';
-                
-                hrCards.innerHTML += `
-                    <div class="hour-item">
-                        <div class="time">${timeStr}</div>
-                        <i class="fa-solid ${ic}"></i>
-                        <div class="temp">${Math.round(interData.temp)}°</div>
-                    </div>
-                `;
-            }
         }
 
-        // Initialize engines
         resizeCanvas();
         initClock();
         locateAndFetch();
